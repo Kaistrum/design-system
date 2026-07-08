@@ -1,0 +1,70 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import {
+  ArrowRight, ChevronDown, Menu, X, Sun, Moon, Server, Shield, Zap,
+  CheckCircle2, AlertTriangle, Info, XCircle,
+} from 'lucide-react';
+
+<Meta title="Foundations/Icons" />
+
+# Icons
+
+**lucide-react** exclusively — don't mix in another icon set. It's
+tree-shakeable (only imported icons ship) and every icon shares the same
+grid, stroke behavior, and sizing model, which is what keeps a page of mixed
+icons looking coherent.
+
+<div className="flex flex-wrap gap-6 p-6 border border-border bg-bg-surface my-6">
+  {[ArrowRight, ChevronDown, Menu, X, Sun, Moon, Server, Shield, Zap, CheckCircle2, AlertTriangle, Info, XCircle].map((Icon, i) => (
+    <div key={i} className="flex flex-col items-center gap-2 text-text-dim">
+      <Icon size={22} style={{ color: 'var(--accent)' }} />
+    </div>
+  ))}
+</div>
+
+## Sizing & stroke
+
+| Context | Size | Stroke width |
+|---|---|---|
+| Inline with `text-xs`/eyebrow labels | 10–11px | default (2) |
+| Inline with body/button text | 13–15px | default (2) |
+| Nav / toolbar icon buttons | 15–16px | default (2) |
+| Large decorative icon (empty states, feature icon) | 48–56px | `1` (thin, so it reads as decoration, not UI) |
+
+```tsx
+import { Server } from 'lucide-react';
+
+// Inline with text — default weight
+<Server size={15} />
+
+// Large decorative — thin stroke so it doesn't compete with content
+<Server size={48} strokeWidth={1} style={{ color: 'var(--accent)' }} />
+```
+
+## The "external/CTA" arrow
+
+A recurring detail: `ArrowRight` rotated -45° reads as an external/forward
+link affordance, distinct from the same icon unrotated (which reads as
+"continue/submit" inside a primary button).
+
+<div className="flex items-center gap-8 p-6 border border-border bg-bg-surface my-6">
+  <div className="flex items-center gap-2 text-accent text-sm">
+    Continue <ArrowRight size={14} />
+  </div>
+  <div className="flex items-center gap-2 text-accent text-sm">
+    Read case study <ArrowRight size={12} style={{ transform: 'rotate(-45deg)' }} />
+  </div>
+</div>
+
+## Color
+
+Icons inherit intent from the same tokens as text: `accent` for
+interactive/brand icons, `text-dim`/`text-muted` for neutral UI icons
+(chevrons, close buttons), and the matching feedback color
+(`success`/`warning`/`danger`/`info`) for status icons — never a raw hex.
+
+<div className="flex flex-wrap gap-6 p-6 border border-border bg-bg-surface my-6">
+  <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--success)' }}><CheckCircle2 size={16} /> Success</div>
+  <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--warning)' }}><AlertTriangle size={16} /> Warning</div>
+  <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--danger)' }}><XCircle size={16} /> Danger</div>
+  <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--info)' }}><Info size={16} /> Info</div>
+</div>

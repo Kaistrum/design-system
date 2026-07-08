@@ -1,0 +1,76 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Foundations/Introduction" />
+
+# Design System
+
+This is the shared design system, ported and formalized from the **Kaistrum**
+landing site (`landing-site/`) so it can be reused consistently across every
+future product surface — marketing sites, dashboards, internal tools.
+
+Everything here — tokens, primitives, organisms — is meant to be copied or
+installed wholesale into a new project rather than re-derived from scratch.
+
+## Principles
+
+These aren't arbitrary — they're the recurring decisions found across every
+component in the source site, made explicit so they survive being copied
+into a new codebase by someone who never saw the original.
+
+- **Sharp, not soft.** Every surface — buttons, cards, inputs, badges — uses
+  `--radius-none` (`0px`) by default. No shadows for elevation; a 1px
+  `--border` does the separating. A `--radius-sm/md/lg` scale exists for the
+  rare deliberate exception (e.g. an avatar), not for general use.
+- **Dark first.** `:root` is the dark palette; `.light` on the root element
+  (usually `<html>`) swaps it. Every component should be built and tested in
+  dark mode first, then checked in light.
+- **One accent, used sparingly.** `--accent` (teal in dark, blue in light) is
+  the only saturated color in the system. It marks the single primary action
+  or the current state — not decoration.
+- **Editorial contrast in type.** Headings mix `font-sans` (SF Pro Display)
+  for weight with an italic `font-serif` (Instrument Serif) fragment for
+  emphasis — see [Typography](/docs/foundations-typography--docs).
+- **Motion is expo-out and purposeful.** Entrances fade + rise
+  (`y: 20 → 0, opacity: 0 → 1`) with `--ease-brand`; state changes
+  (tab indicators, hovers) use `--ease-standard`. See
+  [Motion](/docs/foundations-motion--docs).
+
+## Stack
+
+- **Tailwind CSS v4**, CSS-first config — no `tailwind.config.js`. Tokens
+  live in `src/styles/tokens.css` as plain CSS custom properties and are
+  mapped into Tailwind's theme via `@theme inline` in `src/styles/globals.css`.
+  Utilities like `bg-accent`, `text-dim`, `border-border` come from those
+  tokens directly, so changing a token changes every component that uses it.
+- **class-variance-authority (CVA)** for component variants (`variant`,
+  `size`, etc.), **clsx** + **tailwind-merge** (via the `cn()` helper in
+  `src/lib/utils.ts`) for conditional/overridable class names.
+- **lucide-react** for icons, **framer-motion** for the entrance/hover
+  motion patterns used throughout the source site.
+- **Storybook** as the living catalogue and the reference implementation —
+  every component's `.stories.tsx` file is also its usage documentation.
+
+## Using this system in a new project
+
+1. Copy `src/styles/tokens.css` and `src/styles/globals.css` (or just the
+   `@theme` block + font-faces if the new project has its own tokens).
+2. Copy `src/lib/utils.ts` and `src/theme/ThemeProvider.tsx`.
+3. Copy whichever components under `src/components/` are needed — each is
+   self-contained (one folder, one component, one stories file, no cross-imports
+   beyond `cn()` and tokens).
+4. `npm install tailwindcss @tailwindcss/vite class-variance-authority clsx
+   tailwind-merge lucide-react framer-motion` and wire the Tailwind Vite
+   plugin the way `vite.config.ts` does here.
+5. Wrap the app root in `<ThemeProvider>` and import `globals.css` once, at
+   the entry point.
+
+## Anatomy of a component folder
+
+```
+src/components/Button/
+  Button.tsx           — implementation, CVA variants, exported types
+  Button.stories.tsx   — every variant/size/state as a story, used as docs
+```
+
+No barrel files, no `index.ts` re-export layer — import directly from the
+component's folder. Keeps the dependency graph legible as the system grows.

@@ -1,0 +1,72 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Foundations/Spacing & Layout" />
+
+# Spacing & Layout
+
+This system uses Tailwind's default spacing scale (4px base unit) as-is —
+no custom scale was introduced, because the source site never needed one.
+What *is* deliberate is how that scale gets applied.
+
+## Radius
+
+The brand default is sharp corners everywhere. A scale exists in
+`tokens.css` for the rare exception, but reach for `rounded-none` (the
+default — you usually don't need to write it) before anything else.
+
+<div className="flex flex-wrap gap-4 my-6">
+  {[
+    ['radius-none', '0px — default. Buttons, cards, inputs, badges.'],
+    ['radius-sm', '2px — almost never used.'],
+    ['radius-md', '4px — small chips/avatars when sharp reads wrong.'],
+    ['radius-lg', '8px — large media/image containers, rarely.'],
+    ['radius-full', '9999px — circular avatars, dots, pills, spinners.'],
+  ].map(([name, desc]) => (
+    <div key={name} className="flex flex-col items-center gap-2 w-36">
+      <div className={`w-16 h-16 bg-accent-faint border border-accent rounded-${name.replace('radius-', '')}`} />
+      <p className="text-xs text-text-dim text-center">{desc}</p>
+    </div>
+  ))}
+</div>
+
+## Section rhythm
+
+Every top-level page section in the source site follows the same envelope:
+
+```tsx
+<section className="py-20 md:py-24 px-4 md:px-6">
+  <div className="max-w-6xl mx-auto">{/* content */}</div>
+</section>
+```
+
+- **Vertical padding**: `py-20 md:py-24` for standard sections, `py-20
+  md:py-32` for hero-weight sections (more breathing room top/bottom).
+- **Horizontal padding**: `px-4 md:px-6` almost everywhere; the nav uses
+  `px-4 md:px-8`.
+- **Content width**: `max-w-6xl mx-auto` is the default reading/content
+  width. `max-w-7xl` shows up where a wide tab layout or multi-column grid
+  needs more room. Don't introduce a third width without a reason.
+
+## Grid gaps
+
+| Context | Gap |
+|---|---|
+| Tight card grid (industries, 5-col) | `gap-4` |
+| Standard card grid (case studies, testimonials) | `gap-5` |
+| Two-column form/info split | `gap-5` |
+| Loose two-column content split | `gap-10 lg:gap-20` |
+
+## Card padding
+
+| Density | Padding |
+|---|---|
+| Compact tile | `p-6` |
+| Standard card | `p-7 md:p-8` |
+| Feature panel | `p-8 md:p-10` or `p-8 md:p-12 lg:p-16` |
+
+## Breakpoints
+
+Standard Tailwind breakpoints, unmodified: `sm` 640px, `md` 768px, `lg`
+1024px, `xl` 1280px, `2xl` 1536px. Mobile-first — base styles target the
+smallest screen, `md:` is where desktop layout typically kicks in (nav
+switches from hamburger to full bar at `md:`).

@@ -1,0 +1,168 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap');
+@import "tailwindcss";
+@import "./tokens.css";
+
+/* Tailwind v4 dark mode via class (kept for parity with light-mode-via-class
+   below — this design system is dark-first, so `dark:` is rarely needed,
+   but it's wired up for consumers who want it). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ──────────────────────────────────────────────────────────────────────
+ * Map design tokens into Tailwind's theme so utilities like `bg-accent`,
+ * `text-dim`, `border-border`, `rounded-radius`, `ease-brand` etc. exist
+ * and stay in sync with tokens.css automatically.
+ * ────────────────────────────────────────────────────────────────────── */
+@theme inline {
+  --color-bg:            var(--bg);
+  --color-bg-surface:    var(--bg-surface);
+  --color-bg-card:       var(--bg-card);
+  --color-nav-bg:        var(--nav-bg);
+  --color-drop-bg:       var(--drop-bg);
+  --color-overlay-bg:    var(--overlay-bg);
+
+  --color-border:        var(--border);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-strong: var(--border-strong);
+
+  --color-text:          var(--text);
+  --color-text-dim:      var(--text-dim);
+  --color-text-muted:    var(--text-muted);
+  --color-text-on-accent: var(--text-on-accent);
+  --color-text-on-danger: var(--text-on-danger);
+
+  --color-accent:        var(--accent);
+  --color-accent-dim:    var(--accent-dim);
+  --color-accent-faint:  var(--accent-faint);
+  --color-accent-strong: var(--accent-strong);
+
+  --color-success:       var(--success);
+  --color-success-faint: var(--success-faint);
+  --color-warning:       var(--warning);
+  --color-warning-faint: var(--warning-faint);
+  --color-danger:        var(--danger);
+  --color-danger-faint:  var(--danger-faint);
+  --color-info:          var(--info);
+  --color-info-faint:    var(--info-faint);
+
+  --radius-none: var(--radius-none);
+  --radius-sm:   var(--radius-sm);
+  --radius-md:   var(--radius-md);
+  --radius-lg:   var(--radius-lg);
+  --radius-full: var(--radius-full);
+
+  --font-sans:  var(--font-sans);
+  --font-serif: var(--font-serif);
+
+  --ease-brand:    var(--ease-brand);
+  --ease-standard: var(--ease-standard);
+
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+}
+
+/* ── SF Pro Display (local) ── */
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('/fonts/SFPRODISPLAYREGULAR.OTF') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('/fonts/SFPRODISPLAYMEDIUM.OTF') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('/fonts/SFPRODISPLAYBOLD.OTF') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('/fonts/SFPRODISPLAYHEAVYITALIC.OTF') format('opentype');
+  font-weight: 800;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('/fonts/SFPRODISPLAYSEMIBOLDITALIC.OTF') format('opentype');
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('/fonts/SFPRODISPLAYLIGHTITALIC.OTF') format('opentype');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('/fonts/SFPRODISPLAYTHINITALIC.OTF') format('opentype');
+  font-weight: 100;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('/fonts/SFPRODISPLAYBLACKITALIC.OTF') format('opentype');
+  font-weight: 900;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('/fonts/SFPRODISPLAYULTRALIGHTITALIC.OTF') format('opentype');
+  font-weight: 200;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ── Base ── */
+* {
+  box-sizing: border-box;
+  font-family: var(--font-sans);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  transition: background-color var(--duration-base) ease, color var(--duration-base) ease;
+}
+
+/* Consistent, brand-colored focus ring for keyboard navigation */
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* ── Noise textures ── */
+.noise-overlay {
+  position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+}
+
+.bg-noise {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n2)' opacity='1'/%3E%3C/svg%3E");
+}
+
+/* ── Shared keyframes ── */
+@keyframes gridPulse   { 0%, 100% { opacity: .10; } 50% { opacity: .22; } }
+@keyframes pingRipple  { 0% { transform: scale(0); opacity: .9; } 100% { transform: scale(2.8); opacity: 0; } }
+@keyframes pingFade    { 0%, 60% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes scanline    { 0% { transform: translateY(-100%); } 100% { transform: translateY(100vh); } }
+@keyframes marquee     { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+.map-grid    { animation: gridPulse 4s ease-in-out infinite; }
+.ping-ripple { animation: pingRipple 2s cubic-bezier(0,0,.2,1) infinite; }
+.ping-dot    { animation: pingFade 2s ease-in-out infinite; }

@@ -1,0 +1,80 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Foundations/Typography" />
+
+# Typography
+
+Two font families, used for contrast rather than variety:
+
+- **`font-sans`** — SF Pro Display, loaded locally (`public/fonts/`).
+  Available weights: 400 (regular), 500 (medium), 700 (bold) upright, plus
+  100/200/300/600/800/900 *italic only*. This is the workhorse for
+  everything — headings, body, UI labels.
+- **`font-serif`** — Instrument Serif, loaded from Google Fonts, **italic
+  only**. Used exclusively as a one- or two-word accent inside an otherwise
+  sans-serif heading. It is never used for body copy or UI text.
+
+<div className="flex flex-col gap-1 p-6 border border-border bg-bg-surface my-6">
+  <span className="font-sans text-2xl text-text">The quick brown fox — font-sans</span>
+  <span className="font-serif italic text-2xl text-text-dim">The quick brown fox — font-serif</span>
+</div>
+
+## The heading pattern
+
+Every section heading in the source site follows the same recipe: a bold
+sans-serif lead-in, then one italic-serif fragment for the pivot word or
+phrase. Reach for this pattern for section headers and hero copy — not for
+body text or UI labels.
+
+<div className="p-8 bg-bg-surface border border-border my-6">
+  <p className="text-[10px] uppercase tracking-[0.22em] text-accent font-medium mb-4">Eyebrow label</p>
+  <h2 className="text-3xl md:text-4xl leading-[1.08] text-text">
+    <span className="font-semibold">Every service you need,</span>
+    <span className="font-serif italic text-text-dim"> one partner.</span>
+  </h2>
+</div>
+
+```tsx
+<p className="text-[10px] uppercase tracking-[0.22em] text-accent font-medium mb-4">
+  Eyebrow label
+</p>
+<h2 className="text-3xl md:text-4xl leading-[1.08] text-text">
+  <span className="font-semibold">Every service you need,</span>
+  <span className="font-serif italic text-text-dim"> one partner.</span>
+</h2>
+```
+
+## Eyebrow labels
+
+The small uppercase, wide-tracked label above every section heading and
+form field is a recurring, deliberate pattern — not just "small caps text."
+Use `text-[10px]` or `text-xs`, `uppercase`, `tracking-[0.18em]` to
+`tracking-[0.28em]`, `font-medium` or `font-semibold`, colored `accent` for
+section labels or `text-muted` for form field labels.
+
+<div className="flex flex-col gap-3 p-6 border border-border bg-bg-surface my-6">
+  <p className="text-[10px] uppercase tracking-[0.22em] text-accent font-medium">Section label · text-accent</p>
+  <p className="text-[10px] uppercase tracking-[0.16em] text-text-muted font-medium">Form field label · text-muted</p>
+</div>
+
+## Scale
+
+| Role | Classes | Example use |
+|---|---|---|
+| Display | `text-5xl md:text-7xl font-semibold leading-[0.92]` | Hero headline |
+| H1 | `text-3xl md:text-5xl font-semibold leading-[1.08]` | Page/section heading |
+| H2 | `text-2xl md:text-3xl font-semibold leading-snug` | Sub-section heading |
+| H3 | `text-lg md:text-xl font-semibold leading-snug` | Card/panel title |
+| Body | `text-sm md:text-base leading-relaxed text-text-dim` | Paragraph copy |
+| Small | `text-xs leading-relaxed text-text-muted` | Captions, helper text |
+| Eyebrow | `text-[10px] uppercase tracking-[0.22em] font-medium` | Section/field labels |
+
+## Rules
+
+- Body copy is `text-dim`, never full `text`. Full `text` is reserved for
+  headings and short high-emphasis strings (stat numbers, names).
+- Don't italicize `font-sans` for emphasis — italic upright SF Pro barely
+  exists as a style and isn't part of this system's vocabulary. Emphasis is
+  either weight (`font-semibold`) or a `font-serif italic` fragment.
+- Line-height tightens as size grows: display/H1 use `leading-[0.92]` to
+  `leading-[1.08]`, body text relaxes to `leading-relaxed`/`leading-[1.7]`.

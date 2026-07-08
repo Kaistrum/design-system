@@ -1,0 +1,86 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Foundations/Motion" />
+
+# Motion
+
+Built on **framer-motion**. Two easing curves cover almost everything —
+picking the right one is more important than the exact duration.
+
+| Token | Value | Use for |
+|---|---|---|
+| `--ease-brand` | `cubic-bezier(0.16, 1, 0.3, 1)` | Entrances: content fading/rising into view |
+| `--ease-standard` | `cubic-bezier(0.22, 1, 0.36, 1)` | UI state changes: tab indicators, panel swaps, hovers |
+
+| Token | Value | Use for |
+|---|---|---|
+| `--duration-fast` | 150ms | Color/border transitions on hover |
+| `--duration-base` | 200ms | Most `transition-*` utility durations |
+| `--duration-slow` | 350ms | Larger layout shifts (dropdowns, panel swaps) |
+| `--duration-entrance` | 800ms+ | Scroll-triggered entrance animations |
+
+## Entrance pattern
+
+The single most-repeated animation in the source site: content fades up
+into place the first time it scrolls into view, each item in a group
+staggered slightly after the last.
+
+```tsx
+import { motion, useInView } from 'framer-motion';
+import { useRef } from 'react';
+
+function Reveal({ children, index = 0 }: { children: React.ReactNode; index?: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: '-80px' });
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 24 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.8, delay: index * 0.12, ease: [0.16, 1, 0.3, 1] }}>
+      {children}
+    </motion.div>
+  );
+}
+```
+
+Rules of thumb: `once: true` (don't re-trigger on scroll back up),
+`margin: '-80px'` (start the animation slightly before the element is fully
+in view), stagger delay `index * 0.06` to `index * 0.14` depending on how
+many items are in the group (more items → smaller per-item delay so the
+whole group doesn't take too long to finish).
+
+## State-change pattern
+
+For things that toggle rather than enter — active tab indicators, dropdown
+open/close — use `--ease-standard` and keep it fast:
+
+```tsx
+<motion.div
+  layoutId="tab-indicator"
+  className="absolute bottom-0 left-0 right-0 h-[2px] bg-accent"
+  transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+/>
+```
+
+## Hover micro-interactions
+
+Hover states in this system move things a few pixels, not scale/rotate the
+whole element. The one exception: a small icon "chip" inside a button
+scales up slightly on hover (see the Button primary variant) — that's the
+one deliberate scale effect, reserved for that pattern specifically.
+
+```css
+.transition-colors.duration-200   /* color/border hover */
+.hover:gap-3                      /* button icon nudges right on hover */
+.group-hover:translate-x-0.5      /* arrow icon nudges on hover */
+```
+
+## Reduced motion
+
+Every entrance animation must degrade gracefully — if a consumer sets
+`prefers-reduced-motion: reduce`, components built on the `Reveal` pattern
+above should skip straight to the `animate` end state. When wiring a new
+component, wrap the transition in a check rather than assuming
+framer-motion handles it for you.

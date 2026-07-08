@@ -1,0 +1,73 @@
+import { Meta, ColorPalette, ColorItem } from '@storybook/addon-docs/blocks';
+
+<Meta title="Foundations/Colors" />
+
+# Colors
+
+All colors are CSS custom properties defined in `src/styles/tokens.css`,
+under `:root` (dark, default) and `:root.light`. Never hardcode a hex value
+in a component — reference the token (`var(--accent)` in plain CSS, or the
+`accent` / `bg` / `text-dim` etc. Tailwind utilities that `globals.css` maps
+to them) so switching themes or rebranding a copy of this system is a
+token-file edit, not a find-and-replace.
+
+Toggle the **Theme** control in the toolbar above to see how these repaint.
+
+## Dark (default)
+
+<ColorPalette>
+  <ColorItem title="bg" subtitle="--bg · page background" colors={{ bg: '#07090F' }} />
+  <ColorItem title="bg-surface" subtitle="--bg-surface · raised section background" colors={{ 'bg-surface': '#0D1117' }} />
+  <ColorItem title="bg-card" subtitle="--bg-card · card / tile background" colors={{ 'bg-card': '#111827' }} />
+  <ColorItem title="border" subtitle="--border · default 1px border" colors={{ border: 'rgba(255,255,255,0.07)' }} />
+  <ColorItem title="border-subtle" subtitle="--border-subtle · faint separators" colors={{ 'border-subtle': 'rgba(255,255,255,0.04)' }} />
+  <ColorItem title="border-strong" subtitle="--border-strong · emphasized border, e.g. focus/hover" colors={{ 'border-strong': 'rgba(255,255,255,0.16)' }} />
+  <ColorItem title="text" subtitle="--text · primary text" colors={{ text: '#E2E8F0' }} />
+  <ColorItem title="text-dim" subtitle="--text-dim · secondary text, body copy" colors={{ 'text-dim': 'rgba(226,232,240,0.65)' }} />
+  <ColorItem title="text-muted" subtitle="--text-muted · tertiary text, captions" colors={{ 'text-muted': 'rgba(226,232,240,0.35)' }} />
+  <ColorItem title="accent" subtitle="--accent · the one saturated brand color" colors={{ accent: '#2DD4BF' }} />
+  <ColorItem title="accent-dim" subtitle="--accent-dim · accent at reduced emphasis" colors={{ 'accent-dim': 'rgba(45,212,191,0.65)' }} />
+  <ColorItem title="accent-faint" subtitle="--accent-faint · accent-tinted fill / hover background" colors={{ 'accent-faint': 'rgba(45,212,191,0.10)' }} />
+</ColorPalette>
+
+### Feedback
+
+<ColorPalette>
+  <ColorItem title="success" subtitle="--success / --success-faint" colors={{ success: '#34D399', 'success-faint': 'rgba(52,211,153,0.12)' }} />
+  <ColorItem title="warning" subtitle="--warning / --warning-faint" colors={{ warning: '#FBBF24', 'warning-faint': 'rgba(251,191,36,0.12)' }} />
+  <ColorItem title="danger" subtitle="--danger / --danger-faint" colors={{ danger: '#F87171', 'danger-faint': 'rgba(248,113,113,0.12)' }} />
+  <ColorItem title="info" subtitle="--info / --info-faint" colors={{ info: '#38BDF8', 'info-faint': 'rgba(56,189,248,0.12)' }} />
+</ColorPalette>
+
+## Light
+
+Swapping to light mode isn't just inverting lightness — the accent hue
+itself shifts (teal → blue) and surfaces move from near-black to a cool
+off-white, matching the source brand exactly.
+
+<ColorPalette>
+  <ColorItem title="bg" subtitle="--bg" colors={{ bg: '#FFFFFF' }} />
+  <ColorItem title="bg-surface" subtitle="--bg-surface" colors={{ 'bg-surface': '#F0F4FF' }} />
+  <ColorItem title="bg-card" subtitle="--bg-card" colors={{ 'bg-card': '#F8FAFF' }} />
+  <ColorItem title="text" subtitle="--text" colors={{ text: '#0A0F2E' }} />
+  <ColorItem title="text-dim" subtitle="--text-dim" colors={{ 'text-dim': 'rgba(10,15,46,0.65)' }} />
+  <ColorItem title="text-muted" subtitle="--text-muted" colors={{ 'text-muted': 'rgba(10,15,46,0.35)' }} />
+  <ColorItem title="accent" subtitle="--accent" colors={{ accent: '#005BCC' }} />
+  <ColorItem title="accent-faint" subtitle="--accent-faint" colors={{ 'accent-faint': 'rgba(0,91,204,0.08)' }} />
+</ColorPalette>
+
+## Usage rules
+
+- **Text hierarchy**: `text` for headings and primary content, `text-dim`
+  for body copy, `text-muted` for captions/timestamps/disabled text. Don't
+  skip a level (e.g. heading in `text-muted`).
+- **Accent is for one thing at a time**: the primary CTA on a screen, the
+  active tab/nav item, a focus state, a link on hover. If two elements need
+  to compete for attention, at most one gets the accent.
+- **`-faint` variants are fills, not text.** Use `accent-faint` /
+  `danger-faint` etc. as a tinted background behind accent/danger text or
+  icons (badges, alert panels, icon chips) — never as the text color itself,
+  it fails contrast.
+- **Feedback colors map 1:1 to intent**: success = completed/positive,
+  warning = needs attention, danger = destructive/error, info = neutral
+  informational. Don't reach for `danger` because red "looks stronger."
