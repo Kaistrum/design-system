@@ -1,5 +1,6 @@
 import type { Preview, Decorator } from '@storybook/react-vite';
 import { useEffect } from 'react';
+import { stratumTheme } from './theme';
 import '../src/styles/globals.css';
 
 const WithTheme: Decorator = (Story, context) => {
@@ -11,7 +12,18 @@ const WithTheme: Decorator = (Story, context) => {
   }, [theme]);
 
   return (
-    <div style={{ background: 'var(--bg)', color: 'var(--text)', minHeight: '100%', padding: '1.5rem' }}>
+    <div
+      style={{
+        background: 'var(--bg)',
+        color: 'var(--text)',
+        minHeight: '100%',
+        padding: '1.5rem',
+        // A 1px brand border frames the story on the (dark-first) chrome so a
+        // light-mode preview doesn't read as a bare white island in the docs.
+        border: '1px solid var(--border)',
+        borderRadius: 'var(--radius)',
+      }}
+    >
       <Story />
     </div>
   );
@@ -19,6 +31,10 @@ const WithTheme: Decorator = (Story, context) => {
 
 const preview: Preview = {
   parameters: {
+    // Brand the docs (MDX + autodocs) chrome to match the manager theme.
+    docs: {
+      theme: stratumTheme,
+    },
     controls: {
       matchers: {
         color: /(background|color)$/i,
