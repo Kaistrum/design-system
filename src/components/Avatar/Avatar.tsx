@@ -1,6 +1,6 @@
 import { useState, type HTMLAttributes } from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 
 const avatarVariants = cva(
   'relative inline-flex items-center justify-center shrink-0 overflow-hidden border border-border bg-accent-faint text-accent font-medium tracking-wide shrink-0',

@@ -2,8 +2,8 @@ import { useEffect, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { IconButton } from '@/components/IconButton/IconButton';
+import { cn } from '../../lib/utils';
+import { IconButton } from '../IconButton/IconButton';
 
 export interface ModalProps {
   open: boolean;

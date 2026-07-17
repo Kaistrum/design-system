@@ -32,14 +32,14 @@ const config: StorybookConfig = {
          the brand's regular + medium weights so the themed fontBase applies. */
       @font-face {
         font-family: 'SF Pro Display';
-        src: url('/fonts/SFPRODISPLAYREGULAR.OTF') format('opentype');
+        src: url('/fonts/SFPRODISPLAYREGULAR.woff2') format('woff2'), url('/fonts/SFPRODISPLAYREGULAR.OTF') format('opentype');
         font-weight: 400;
         font-style: normal;
         font-display: swap;
       }
       @font-face {
         font-family: 'SF Pro Display';
-        src: url('/fonts/SFPRODISPLAYMEDIUM.OTF') format('opentype');
+        src: url('/fonts/SFPRODISPLAYMEDIUM.woff2') format('woff2'), url('/fonts/SFPRODISPLAYMEDIUM.OTF') format('opentype');
         font-weight: 500;
         font-style: normal;
         font-display: swap;

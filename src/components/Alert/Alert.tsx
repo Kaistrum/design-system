@@ -1,8 +1,8 @@
 import type { HTMLAttributes, ReactNode } from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { CheckCircle2, AlertTriangle, XCircle, Info, X } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { IconButton } from '@/components/IconButton/IconButton';
+import { cn } from '../../lib/utils';
+import { IconButton } from '../IconButton/IconButton';
 
 const alertVariants = cva('flex gap-3 border p-4', {
   variants: {

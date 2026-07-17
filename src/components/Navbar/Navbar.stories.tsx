@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Navbar } from './Navbar';
-import { ThemeToggle } from '@/components/ThemeToggle/ThemeToggle';
+import { ThemeToggle } from '../ThemeToggle/ThemeToggle';
 import { ThemeProvider } from '@/theme/ThemeProvider';
 
 const meta = {

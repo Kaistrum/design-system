@@ -1,0 +1,8 @@
+<!-- Preload the brand faces used on first paint so text renders in
+     SF Pro Display immediately instead of after a swap flash. -->
+<link rel="preload" href="/fonts/SFPRODISPLAYREGULAR.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/fonts/SFPRODISPLAYBOLD.woff2" as="font" type="font/woff2" crossorigin />
+<!-- Instrument Serif comes from Google Fonts (via @import in globals.css);
+     preconnecting removes the DNS+TLS round trips from its critical path. -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

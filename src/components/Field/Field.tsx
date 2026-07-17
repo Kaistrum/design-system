@@ -1,5 +1,5 @@
 import { type ReactNode, useId } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 
 export interface FieldProps {
   label?: ReactNode;

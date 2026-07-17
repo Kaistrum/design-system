@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Modal } from './Modal';
-import { Button } from '@/components/Button/Button';
+import { Button } from '../Button/Button';
 
 const meta = {
   title: 'Navigation/Modal',

@@ -1,0 +1,6 @@
+# Long-lived immutable caching for content-hashed build output and fonts.
+# Served by Cloudflare (Workers static assets / Pages honor this file).
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable

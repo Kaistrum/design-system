@@ -25,6 +25,8 @@ dist-ssr
 
 *storybook.log
 storybook-static
+dist-lib
+*.tgz
 
 # Claude Code local files
 .claude/

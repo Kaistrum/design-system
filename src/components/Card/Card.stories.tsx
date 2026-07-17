@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ArrowRight } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from './Card';
-import { Button } from '@/components/Button/Button';
+import { Button } from '../Button/Button';
 
 const meta = {
   title: 'Feedback/Card',

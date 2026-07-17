@@ -1,6 +1,6 @@
 import type { HTMLAttributes } from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 
 const gridVariants = cva('grid grid-cols-1', {
   variants: {

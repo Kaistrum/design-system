@@ -1,6 +1,6 @@
 import { createContext, useContext, useId, useState, type ReactNode } from 'react';
 import { motion } from 'framer-motion';
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 
 interface TabsContextValue {
   value: string;

@@ -5,7 +5,7 @@ import {
   type ButtonHTMLAttributes,
 } from 'react';
 import { Check, Truck, TriangleAlert } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 
 type ShipState = 'idle' | 'loading' | 'shipping' | 'crashed' | 'done';
 

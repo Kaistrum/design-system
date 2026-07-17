@@ -1,7 +1,7 @@
 import { forwardRef, type AnchorHTMLAttributes } from 'react';
 import { ArrowRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { buttonVariants } from '@/components/Button/Button';
+import { cn } from '../../lib/utils';
+import { buttonVariants } from '../Button/Button';
 
 export interface LinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
   variant?: 'default' | 'accent' | 'button-primary' | 'button-outline' | 'button-ghost';

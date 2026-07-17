@@ -1,6 +1,6 @@
 import { forwardRef, type TextareaHTMLAttributes, type ReactNode } from 'react';
-import { cn } from '@/lib/utils';
-import { Field } from '@/components/Field/Field';
+import { cn } from '../../lib/utils';
+import { Field } from '../Field/Field';
 
 export interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?: ReactNode;

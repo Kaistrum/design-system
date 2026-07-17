@@ -1,6 +1,6 @@
 import { Moon, Sun } from 'lucide-react';
-import { useTheme } from '@/theme/ThemeProvider';
-import { IconButton } from '@/components/IconButton/IconButton';
+import { useTheme } from '../../theme/ThemeProvider';
+import { IconButton } from '../IconButton/IconButton';
 
 export interface ThemeToggleProps {
   size?: 'sm' | 'md' | 'lg';

@@ -1,5 +1,5 @@
-import { cn } from '@/lib/utils';
-import { CountUp } from '@/components/CountUp/CountUp';
+import { cn } from '../../lib/utils';
+import { CountUp } from '../CountUp/CountUp';
 
 export interface Stat {
   value: string;

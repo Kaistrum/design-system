@@ -1,7 +1,7 @@
 import type { HTMLAttributes } from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from '@/lib/utils';
-import { Container, type ContainerProps } from '@/components/Container/Container';
+import { cn } from '../../lib/utils';
+import { Container, type ContainerProps } from '../Container/Container';
 
 const sectionVariants = cva('px-4 md:px-6', {
   variants: {
