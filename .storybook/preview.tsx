@@ -1,29 +1,17 @@
 import type { Preview, Decorator } from '@storybook/react-vite';
 import { useEffect } from 'react';
-import { stratumTheme } from './theme';
 import '../src/styles/globals.css';
 
 const WithTheme: Decorator = (Story, context) => {
-  const theme = context.globals.theme ?? 'dark';
+  const theme = context.globals.theme ?? 'light';
 
   useEffect(() => {
-    document.documentElement.classList.toggle('light', theme === 'light');
+    document.documentElement.dataset.theme = theme;
     document.body.style.background = 'var(--bg)';
   }, [theme]);
 
   return (
-    <div
-      style={{
-        background: 'var(--bg)',
-        color: 'var(--text)',
-        minHeight: '100%',
-        padding: '1.5rem',
-        // A 1px brand border frames the story on the (dark-first) chrome so a
-        // light-mode preview doesn't read as a bare white island in the docs.
-        border: '1px solid var(--border)',
-        borderRadius: 'var(--radius)',
-      }}
-    >
+    <div style={{ background: 'var(--bg)', color: 'var(--text)', minHeight: '100%', padding: '1.5rem' }}>
       <Story />
     </div>
   );
@@ -31,10 +19,6 @@ const WithTheme: Decorator = (Story, context) => {
 
 const preview: Preview = {
   parameters: {
-    // Brand the docs (MDX + autodocs) chrome to match the manager theme.
-    docs: {
-      theme: stratumTheme,
-    },
     controls: {
       matchers: {
         color: /(background|color)$/i,
@@ -76,7 +60,7 @@ const preview: Preview = {
     },
   },
   initialGlobals: {
-    theme: 'dark',
+    theme: 'light',
   },
   decorators: [WithTheme],
 };

@@ -75,7 +75,10 @@
   --focus-ring: var(--accent);
 }
 
-:root.light {
+/* Light palette applies via either mechanism: the `.light` class (used by
+   ThemeProvider) or `data-theme="light"` (used by the Storybook toolbar). */
+:root.light,
+:root[data-theme='light'] {
   --bg:            #FFFFFF;
   --bg-surface:    #F0F4FF;
   --bg-card:       #F8FAFF;

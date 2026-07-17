@@ -67,7 +67,7 @@ const config: StorybookConfig = {
         font-weight: 600;
         font-size: 15px;
         letter-spacing: 0.2px;
-        color: #E2E8F0;
+        color: #111827; /* matches the light manager theme's barTextColor */
       }
 
       /* Storybook 10's onboarding checklist ("See what's new", "Share your
