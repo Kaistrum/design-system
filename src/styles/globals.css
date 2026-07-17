@@ -166,3 +166,14 @@ body {
 .map-grid    { animation: gridPulse 4s ease-in-out infinite; }
 .ping-ripple { animation: pingRipple 2s cubic-bezier(0,0,.2,1) infinite; }
 .ping-dot    { animation: pingFade 2s ease-in-out infinite; }
+
+/* ── ShipButton (see src/components/ShipButton) ── */
+@keyframes shipWheel { to { transform: rotate(360deg); } }
+@keyframes shipRoad  { to { background-position: -18px 0; } }
+@keyframes shipPop   { 0% { opacity: 0; transform: scale(.3); } 60% { opacity: 1; transform: scale(1.25); } 100% { opacity: 1; transform: scale(1); } }
+@keyframes shipPuff  { 0% { opacity: .6; transform: scale(.3); } 100% { opacity: 0; transform: scale(2) translate(-10px, -8px); } }
+
+.ship-wheel-spin { animation: shipWheel .4s linear infinite; }
+.ship-road-move  { animation: shipRoad .4s linear infinite; }
+.ship-bang-pop   { animation: shipPop .4s cubic-bezier(.2,.9,.3,1.4) forwards; }
+.ship-puff-out   { animation: shipPuff .7s ease-out forwards; }
