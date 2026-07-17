@@ -1,0 +1,86 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Foundations/Installation" />
+
+# Installation
+
+Stratum UI ships as an npm package — **`@kaistrum/stratum-ui`** — containing
+every component in this Storybook, the `ThemeProvider`, the `cn()` helper,
+full TypeScript types, and the design-token stylesheets.
+
+## 1. Install the package
+
+```bash
+# pnpm
+pnpm add @kaistrum/stratum-ui
+
+# npm
+npm install @kaistrum/stratum-ui
+```
+
+**Peer dependencies** — your app provides these (the package's other
+dependencies install automatically):
+
+```bash
+pnpm add react react-dom tailwindcss
+```
+
+React 19+ and Tailwind CSS v4 are required. Tailwind is not optional: the
+components are styled with utility classes that your app's Tailwind build
+compiles.
+
+## 2. Wire up the styles
+
+In your app's main CSS file (the one Tailwind processes):
+
+```css
+@import '@kaistrum/stratum-ui/styles/globals.css';
+
+/* Tailwind v4 does not scan node_modules by default — this makes it
+   pick up the utility classes used inside the library's components.
+   Adjust the relative path to node_modules for your file's location. */
+@source "../node_modules/@kaistrum/stratum-ui/dist-lib";
+```
+
+`globals.css` already includes `@import "tailwindcss"`, the token → theme
+mapping, the font-face declarations, and base styles — one import gives you
+the whole system. If you only want the design tokens (no components), import
+`@kaistrum/stratum-ui/styles/tokens.css` instead.
+
+## 3. Use the components
+
+```tsx
+import { ThemeProvider, Button, ShipButton } from '@kaistrum/stratum-ui';
+
+export function App() {
+  return (
+    <ThemeProvider>
+      <Button variant="primary">Contact</Button>
+      <ShipButton outcome="success" onResult={(o) => console.log(o)} />
+    </ThemeProvider>
+  );
+}
+```
+
+Dark is the default theme. `ThemeProvider` toggles the `.light` class on
+`<html>` and persists the choice; call `useTheme()` anywhere below it for
+`{ theme, setTheme, toggleTheme }`.
+
+## 4. Self-host the brand fonts
+
+SF Pro Display is Apple-licensed and is **not** bundled in the package. Copy
+your licensed font files into your app's `public/fonts/` directory using the
+same file names referenced by `globals.css` (e.g.
+`SFPRODISPLAYREGULAR.woff2`), or override `--font-sans` in your own CSS to
+use a different typeface. Instrument Serif loads from Google Fonts
+automatically.
+
+## Versions and updates
+
+```bash
+pnpm up @kaistrum/stratum-ui        # update to the latest release
+pnpm add @kaistrum/stratum-ui@0.1.0 # pin an exact version
+```
+
+Maintainers: the release process (building, versioning, publishing to npm)
+is documented in [PUBLISHING.md](https://github.com/Kaistrum/design-system/blob/main/PUBLISHING.md).

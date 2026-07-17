@@ -35,8 +35,9 @@ export interface ShipButtonProps
  *
  * All motion is Web Animations API + the ship* keyframes in globals.css, and
  * every color is a design token — accent truck, danger crash, success arrival.
- * With `prefers-reduced-motion`, the scene is hidden and the button simply
- * swaps label states.
+ * The scene always plays: it is the button's loading indicator, so it is not
+ * gated behind prefers-reduced-motion (Windows machines with "animation
+ * effects" off would otherwise see no pending state at all).
  */
 export const ShipButton = ({
   outcome = 'success',
@@ -229,7 +230,7 @@ export const ShipButton = ({
       <span
         aria-hidden="true"
         className={cn(
-          'absolute left-2 right-2 bottom-1.5 h-0.5 transition-opacity duration-200 motion-reduce:hidden',
+          'absolute left-2 right-2 bottom-1.5 h-0.5 transition-opacity duration-200',
           busy && 'opacity-45',
           state === 'shipping' && 'ship-road-move',
           state === 'crashed' && 'opacity-35',
@@ -244,7 +245,7 @@ export const ShipButton = ({
       <span
         ref={moverRef}
         aria-hidden="true"
-        className="absolute left-0 bottom-2 w-16 h-[30px] pointer-events-none motion-reduce:hidden"
+        className="absolute left-0 bottom-2 w-16 h-[30px] pointer-events-none"
         style={{ transform: 'translateX(-90px)' }}>
         <span
           className={cn(
