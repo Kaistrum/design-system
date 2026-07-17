@@ -7,14 +7,15 @@ import {
 import { Check, Truck, TriangleAlert } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-type ShipState = 'idle' | 'shipping' | 'crashed' | 'done';
+type ShipState = 'idle' | 'loading' | 'shipping' | 'crashed' | 'done';
 
 export interface ShipButtonProps
   extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'onClick'> {
   /**
    * Result of the next run. `'success'` drives the truck across and out;
-   * `'failure'` crashes it mid-route (nose-dive, skid marks, dust) and holds
-   * the button in a danger "retry" state until clicked again.
+   * `'failure'` crashes it mid-route (nose-dive, skid marks, dust, the
+   * package tossed off the bed) and holds a danger "retry" state until
+   * clicked again.
    */
   outcome?: 'success' | 'failure';
   idleLabel?: string;
@@ -25,15 +26,17 @@ export interface ShipButtonProps
 }
 
 /**
- * Primary action button where the loading state is a truck driving across
- * the button on a dashed road. Success: the truck exits right and the button
- * settles into a success state. Failure: the truck crashes mid-route and the
- * button flips to a danger state that retries on click.
+ * Primary action button where the pending state is a small logistics scene:
+ * the truck pulls in from the left and stops at the dock, a package drops
+ * onto its bed (suspension settles), then it drives the route. Success: it
+ * exits right and the button settles into a success state. Failure: it
+ * crashes mid-route and the button flips to a danger state that retries on
+ * click.
  *
  * All motion is Web Animations API + the ship* keyframes in globals.css, and
  * every color is a design token — accent truck, danger crash, success arrival.
- * With `prefers-reduced-motion`, the truck and road are hidden and the button
- * simply swaps label states.
+ * With `prefers-reduced-motion`, the scene is hidden and the button simply
+ * swaps label states.
  */
 export const ShipButton = ({
   outcome = 'success',
@@ -49,8 +52,8 @@ export const ShipButton = ({
   const btnRef = useRef<HTMLButtonElement>(null);
   const moverRef = useRef<HTMLSpanElement>(null);
   const truckRef = useRef<SVGSVGElement>(null);
-  const driveRef = useRef<Animation | null>(null);
-  const tipRef = useRef<Animation | null>(null);
+  const pkgRef = useRef<HTMLSpanElement>(null);
+  const animsRef = useRef<Animation[]>([]);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const setSt = (next: ShipState) => {
@@ -58,55 +61,118 @@ export const ShipButton = ({
     setState(next);
   };
 
+  const track = (anim: Animation) => {
+    animsRef.current.push(anim);
+    return anim;
+  };
+
   const reset = () => {
-    driveRef.current?.cancel();
-    tipRef.current?.cancel();
+    animsRef.current.forEach((a) => a.cancel());
+    animsRef.current = [];
     if (timerRef.current) clearTimeout(timerRef.current);
     setSt('idle');
   };
 
   useEffect(() => reset, []);
 
+  /** Dock position the truck loads at before driving off. */
+  const DOCK_X = 22;
+
   const go = () => {
     const willFail = outcome === 'failure';
-    setSt('shipping');
-    const w = btnRef.current?.offsetWidth ?? 236;
-    driveRef.current = moverRef.current!.animate(
-      [
-        { transform: 'translateX(-90px)' },
-        { transform: `translateX(${willFail ? w * 0.4 : w + 26}px)` },
-      ],
-      {
-        duration: willFail ? 950 : 1650,
-        easing: willFail ? 'cubic-bezier(.45,0,.9,1)' : 'cubic-bezier(.25,.9,.35,1)',
-        fill: 'forwards',
-      },
+    setSt('loading');
+
+    const pullIn = track(
+      moverRef.current!.animate(
+        [{ transform: 'translateX(-90px)' }, { transform: `translateX(${DOCK_X}px)` }],
+        { duration: 500, easing: 'cubic-bezier(.25,.9,.35,1)', fill: 'forwards' },
+      ),
     );
-    driveRef.current.onfinish = () => {
-      if (stateRef.current !== 'shipping') return;
-      if (willFail) {
-        setSt('crashed');
-        tipRef.current = truckRef.current!.animate(
+
+    pullIn.onfinish = () => {
+      if (stateRef.current !== 'loading') return;
+
+      track(
+        pkgRef.current!.animate(
           [
-            { transform: 'rotate(0deg) translateY(0px)' },
-            { transform: 'rotate(16deg) translateY(-4px)', offset: 0.35 },
-            { transform: 'rotate(12deg) translateY(0px)', offset: 0.65 },
-            { transform: 'rotate(14deg) translateY(-1px)' },
+            { opacity: 1, transform: 'translateY(-22px)' },
+            { opacity: 1, transform: 'translateY(2px)', offset: 0.7 },
+            { opacity: 1, transform: 'translateY(0px)' },
           ],
-          { duration: 520, easing: 'cubic-bezier(.2,.9,.3,1.4)', fill: 'forwards' },
-        );
-        onResult?.('failure');
-      } else {
-        setSt('done');
-        onResult?.('success');
-        timerRef.current = setTimeout(reset, 1700);
-      }
+          { duration: 320, easing: 'cubic-bezier(.2,.9,.3,1.4)', fill: 'forwards' },
+        ),
+      );
+      const settle = track(
+        truckRef.current!.animate(
+          [
+            { transform: 'translateY(0px)' },
+            { transform: 'translateY(1.5px)', offset: 0.7 },
+            { transform: 'translateY(0px)' },
+          ],
+          { duration: 320, delay: 180, easing: 'ease-out' },
+        ),
+      );
+
+      settle.onfinish = () => {
+        if (stateRef.current !== 'loading') return;
+        timerRef.current = setTimeout(drive, 90);
+      };
+    };
+
+    const drive = () => {
+      setSt('shipping');
+      const w = btnRef.current?.offsetWidth ?? 236;
+      const driveAnim = track(
+        moverRef.current!.animate(
+          [
+            { transform: `translateX(${DOCK_X}px)` },
+            { transform: `translateX(${willFail ? w * 0.4 : w + 26}px)` },
+          ],
+          {
+            duration: willFail ? 700 : 1500,
+            easing: willFail ? 'cubic-bezier(.5,0,.85,.5)' : 'cubic-bezier(.45,0,.55,1)',
+            fill: 'forwards',
+          },
+        ),
+      );
+      driveAnim.onfinish = () => {
+        if (stateRef.current !== 'shipping') return;
+        if (willFail) {
+          setSt('crashed');
+          track(
+            truckRef.current!.animate(
+              [
+                { transform: 'rotate(0deg) translateY(0px)' },
+                { transform: 'rotate(16deg) translateY(-4px)', offset: 0.35 },
+                { transform: 'rotate(12deg) translateY(0px)', offset: 0.65 },
+                { transform: 'rotate(14deg) translateY(-1px)' },
+              ],
+              { duration: 520, easing: 'cubic-bezier(.2,.9,.3,1.4)', fill: 'forwards' },
+            ),
+          );
+          track(
+            pkgRef.current!.animate(
+              [
+                { opacity: 1, transform: 'translateY(0px) rotate(0deg)' },
+                { opacity: 1, transform: 'translate(12px, -16px) rotate(45deg)', offset: 0.55 },
+                { opacity: 0, transform: 'translate(20px, 4px) rotate(90deg)' },
+              ],
+              { duration: 600, easing: 'cubic-bezier(.3,.6,.6,1)', fill: 'forwards' },
+            ),
+          );
+          onResult?.('failure');
+        } else {
+          setSt('done');
+          onResult?.('success');
+          timerRef.current = setTimeout(reset, 1700);
+        }
+      };
     };
   };
 
   const handleClick = () => {
     const st = stateRef.current;
-    if (st === 'shipping' || st === 'done') return;
+    if (st === 'loading' || st === 'shipping' || st === 'done') return;
     if (st === 'crashed') {
       reset();
       timerRef.current = setTimeout(go, 180);
@@ -114,6 +180,8 @@ export const ShipButton = ({
     }
     go();
   };
+
+  const busy = state === 'loading' || state === 'shipping';
 
   const label = (visible: boolean, extra?: string) =>
     cn(
@@ -137,7 +205,7 @@ export const ShipButton = ({
         'transition-[background-color,border-color] duration-200',
         'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
         state === 'idle' && 'bg-accent border-accent text-text-on-accent',
-        state === 'shipping' && 'bg-bg-card border-border-strong text-text',
+        busy && 'bg-bg-card border-border-strong text-text',
         state === 'crashed' && 'bg-danger-faint border-danger text-danger',
         state === 'done' && 'bg-success-faint border-success text-success',
         className,
@@ -148,7 +216,9 @@ export const ShipButton = ({
         {idleLabel}
       </span>
       <span className={label(state === 'done')}>
-        <Check size={16} aria-hidden="true" />
+        <span className={cn('inline-flex', state === 'done' && 'ship-bang-pop')}>
+          <Check size={16} aria-hidden="true" />
+        </span>
         {successLabel}
       </span>
       <span className={label(state === 'crashed', 'text-[13px]')}>
@@ -160,7 +230,8 @@ export const ShipButton = ({
         aria-hidden="true"
         className={cn(
           'absolute left-2 right-2 bottom-1.5 h-0.5 transition-opacity duration-200 motion-reduce:hidden',
-          state === 'shipping' && 'opacity-45 ship-road-move',
+          busy && 'opacity-45',
+          state === 'shipping' && 'ship-road-move',
           state === 'crashed' && 'opacity-35',
           (state === 'idle' || state === 'done') && 'opacity-0',
         )}
@@ -206,6 +277,14 @@ export const ShipButton = ({
           )}>
           !
         </span>
+        <span
+          ref={pkgRef}
+          className="absolute -top-1.5 left-[14px] w-3 h-[9px] opacity-0"
+          style={{
+            background: 'var(--accent-strong)',
+            border: '1px solid var(--bg)',
+          }}
+        />
         <svg
           ref={truckRef}
           viewBox="0 0 64 30"
@@ -219,11 +298,11 @@ export const ShipButton = ({
           />
           <path d="M35 8 h11 l8 7 v5 h-19 z" fill="var(--accent)" opacity=".82" />
           <rect x="38" y="10.5" width="7" height="5" fill="var(--bg)" opacity=".85" />
-          <g className={cn('[transform-box:fill-box] origin-center', state === 'shipping' && 'ship-wheel-spin')}>
+          <g className={cn('[transform-box:fill-box] origin-center', busy && 'ship-wheel-spin')}>
             <circle cx="12" cy="24" r="4.6" fill="none" stroke="var(--text)" strokeWidth="2" />
             <line x1="12" y1="21" x2="12" y2="27" stroke="var(--text)" strokeWidth="1.5" />
           </g>
-          <g className={cn('[transform-box:fill-box] origin-center', state === 'shipping' && 'ship-wheel-spin')}>
+          <g className={cn('[transform-box:fill-box] origin-center', busy && 'ship-wheel-spin')}>
             <circle cx="47" cy="24" r="4.6" fill="none" stroke="var(--text)" strokeWidth="2" />
             <line x1="47" y1="21" x2="47" y2="27" stroke="var(--text)" strokeWidth="1.5" />
           </g>
