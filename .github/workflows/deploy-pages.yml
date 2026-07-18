@@ -1,0 +1,57 @@
+name: Deploy Storybook to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm run build
+
+      # Project Pages serve from /<repo>/ rather than the domain root. The
+      # source keeps absolute /fonts/ and /Kaistrum-logo.svg paths (correct
+      # for local dev, the Cloudflare deploy, and npm consumers), so rebase
+      # them to the subpath here, at deploy time only.
+      - name: Rebase absolute asset paths for the Pages subpath
+        env:
+          REPO: ${{ github.event.repository.name }}
+        run: |
+          find dist -type f \( -name '*.html' -o -name '*.css' -o -name '*.js' \) -print0 \
+            | xargs -0 sed -i "s|/fonts/|/${REPO}/fonts/|g; s|/Kaistrum-logo.svg|/${REPO}/Kaistrum-logo.svg|g"
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
