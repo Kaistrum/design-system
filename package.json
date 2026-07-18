@@ -1,5 +1,5 @@
 {
-  "name": "@kaistrum/stratum-ui",
+  "name": "@kai_stratum/stratum-ui",
   "version": "0.2.0",
   "description": "Stratum UI — the Kaistrum design system: tokens, primitives, and organisms for React + Tailwind CSS v4.",
   "type": "module",
