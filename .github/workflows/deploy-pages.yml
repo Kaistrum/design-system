@@ -48,6 +48,10 @@ jobs:
             | xargs -0 sed -i "s|/fonts/|/${REPO}/fonts/|g; s|/Kaistrum-logo.svg|/${REPO}/Kaistrum-logo.svg|g"
 
       - uses: actions/configure-pages@v5
+        with:
+          # Enables GitHub Pages on the repo automatically on first run,
+          # so no manual Settings -> Pages step is needed.
+          enablement: true
 
       - uses: actions/upload-pages-artifact@v3
         with:
