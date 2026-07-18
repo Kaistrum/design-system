@@ -36,9 +36,10 @@
     "build:lib": "vite build -c vite.lib.config.ts && tsc -p tsconfig.lib.json",
     "prepublishOnly": "pnpm run build:lib",
     "lint": "oxlint",
-    "preview": "vite preview",
+    "preview": "pnpm run build-app && wrangler dev",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "deploy": "pnpm run build-app && wrangler deploy"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
@@ -54,6 +55,7 @@
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^5.2.1",
+    "@cloudflare/vite-plugin": "^1.45.1",
     "@storybook/addon-a11y": "^10.4.6",
     "@storybook/addon-docs": "^10.4.6",
     "@storybook/addon-vitest": "^10.4.6",
@@ -73,6 +75,7 @@
     "tailwindcss": "^4.3.2",
     "typescript": "~6.0.2",
     "vite": "^8.1.1",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.10",
+    "wrangler": "^4.112.0"
   }
 }
